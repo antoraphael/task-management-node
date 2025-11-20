@@ -34,7 +34,17 @@ class UserController {
       next(error);
     }
   };
+
+  userSession = (req: Request, res: Response, next: NextFunction) => {
+    try {
+      res.json({
+        message: 'Session established',
+        user: { name: req?.user?.name, email: req?.user?.email, role: req?.user?.role }
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
 }
 
 export const userController = new UserController();
-
