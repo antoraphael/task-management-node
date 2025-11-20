@@ -5,6 +5,7 @@ import { mailer } from '../config/mailer';
 import { userService } from './userService';
 import { ApiError } from '../middleware/errorHandler';
 import { IUser } from '../models/User';
+import { otpTemplate } from '../templates/loginOtp';
 
 interface LoginResult {
   user: IUser;
@@ -12,7 +13,6 @@ interface LoginResult {
 }
 
 const hashOtp = (otp: string): string => crypto.createHash('sha256').update(otp).digest('hex');
-
 const generateOtp = (): string => crypto.randomInt(100000, 999999).toString();
 
 class AuthService {
@@ -35,20 +35,14 @@ class AuthService {
       lastSentAt: new Date(now)
     };
     await user.save();
+    const { text, html } = otpTemplate(user.name, otp, env.otpMaxAttempts);
 
     await mailer.sendMail({
       to: "aqraphzz100@gmail.com",
       from: env.mailFrom,
       subject: 'Your Task Management OTP',
-      text: `Hi ${user.name},
-
-Your one-time password is ${otp}. It expires in 24 hours and is valid for ${env.otpMaxAttempts} attempts.
-
-If you did not request this code, please contact the admin team.`,
-      html: `<p>Hi ${user.name},</p>
-<p>Your one-time password is <strong>${otp}</strong>.</p>
-<p>It expires in 24 hours and is valid for ${env.otpMaxAttempts} attempts.</p>
-<p>If you did not request this code, please contact the admin team.</p>`
+      text,
+      html
     });
 
     return { resendAvailableInSeconds: Math.floor(env.otpResendIntervalMs / 1000) };
