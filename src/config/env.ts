@@ -19,7 +19,7 @@ export const env = {
   socketPort: parseNumber(process.env.SOCKET_PORT, 5000),
   mongoUri: process.env.MONGO_URI ?? 'mongodb://127.0.0.1:27017/task_management',
   nodeEnv: process.env.NODE_ENV ?? 'development',
-  clientOrigin: process.env.CLIENT_ORIGIN ?? 'http://localhost:3000',
+  clientOrigin: process.env.CLIENT_ORIGIN ?? 'http://localhost:5173',
   jwtSecret: process.env.JWT_SECRET ?? 'change-me',
   jwtExpiresIn: process.env.JWT_EXPIRES_IN ?? '1h',
   authCookieName: process.env.AUTH_COOKIE_NAME ?? 'token',
@@ -35,4 +35,3 @@ export const env = {
   mailPass: process.env.MAIL_PASS ?? '',
   mailFrom: process.env.MAIL_FROM ?? process.env.MAIL_USER ?? 'no-reply@task-manager.com'
 };
-
